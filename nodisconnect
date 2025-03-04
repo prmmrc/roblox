@@ -20,7 +20,7 @@ ca.TextSize = 26
 da.Parent = ca
 da.BackgroundColor3 = Color3.new(0.196078, 0.196078, 0.196078)
 da.Position = UDim2.new(0, 0, 1.0192306, 0)
-da.Size = UDim2.new(0, 304, 0, 70) -- Adjusted size to remove empty space
+da.Size = UDim2.new(0, 304, 0, 70) 
 
 ab.Parent = da
 ab.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
@@ -40,14 +40,12 @@ game:service("Players").LocalPlayer.Idled:connect(function()
     ab.Text = "Script Re-Enabled"
 end)
 
--- User notification: Appears at the bottom right of the screen
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Notification",
     Text = "Made by prmmrc, enjoy!",
     Duration = 5
 })
 
--- Rainbow text effect for the title "Anti Afk Kick Script"
 spawn(function()
     while true do
         local hue = tick() % 5 / 5  -- Cycles the hue value over time
