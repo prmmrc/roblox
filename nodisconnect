@@ -28,7 +28,7 @@ _b.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
 _b.Position = UDim2.new(0, 0, 0.800455689, 0)
 _b.Size = UDim2.new(0, 304, 0, 21)
 _b.Font = Enum.Font.Arial
-_b.Text = ""
+_b.Text = "Made by Discord: _prmmrc"
 _b.TextColor3 = Color3.new(1, 1, 1)
 _b.TextSize = 20
 
@@ -42,7 +42,6 @@ ab.TextColor3 = Color3.new(1, 1, 1)
 ab.TextSize = 20
 
 local bb = game:service("VirtualUser")
-
 game:service("Players").LocalPlayer.Idled:connect(function()
     bb:CaptureController()
     bb:ClickButton2(Vector2.new())
@@ -51,7 +50,14 @@ game:service("Players").LocalPlayer.Idled:connect(function()
     ab.Text = "Script Re-Enabled"
 end)
 
--- Rainbow text effect for the title
+-- User notification: Appears at the bottom right of the screen
+game:GetService("StarterGui"):SetCore("SendNotification", {
+    Title = "Notification",
+    Text = "Made by prmmrc, enjoy!",
+    Duration = 5
+})
+
+-- Rainbow text effect for the title "Anti Afk Kick Script"
 spawn(function()
     while true do
         local hue = tick() % 5 / 5  -- Cycles the hue value over time
