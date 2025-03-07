@@ -18,7 +18,7 @@ ca.Draggable = true
 ca.Position = UDim2.new(0.698610067, 0, 0.098096624, 0)
 ca.Size = UDim2.new(0, 304, 0, 52)
 ca.Font = Enum.Font.SourceSansSemibold
-ca.Text = "Anti Afk Kick Script"
+ca.Text = "No Disconnection"
 ca.TextSize = 22
 
 -- Frame Container for Status and Buttons
