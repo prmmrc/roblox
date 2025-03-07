@@ -66,10 +66,10 @@ spawn(function()
     end
 end)
 
--- Pause/Resume Button (Blue)
+-- Pause/Resume Button (Lighter Blue)
 local pauseButton = Instance.new("TextButton")
 pauseButton.Parent = da
-pauseButton.BackgroundColor3 = Color3.new(0, 0, 1)  -- Blue
+pauseButton.BackgroundColor3 = Color3.fromRGB(102, 178, 255)  -- Lighter Blue
 pauseButton.Position = UDim2.new(0.05, 0, 0.55, 0)
 pauseButton.Size = UDim2.new(0, 120, 0, 30)
 pauseButton.Font = Enum.Font.SourceSans
@@ -88,10 +88,10 @@ pauseButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Unload Button (Red)
+-- Unload Button (Lighter Red)
 local unloadButton = Instance.new("TextButton")
 unloadButton.Parent = da
-unloadButton.BackgroundColor3 = Color3.new(1, 0, 0)  -- Red
+unloadButton.BackgroundColor3 = Color3.fromRGB(255, 102, 102)  -- Lighter Red
 unloadButton.Position = UDim2.new(0.55, 0, 0.55, 0)
 unloadButton.Size = UDim2.new(0, 120, 0, 30)
 unloadButton.Font = Enum.Font.SourceSans
