@@ -1,6 +1,7 @@
 wait(0.5)
 local isPaused = false
 local isUnloaded = false
+local startTime = tick()
 
 local ba = Instance.new("ScreenGui")
 local ca = Instance.new("TextLabel")
@@ -21,21 +22,43 @@ ca.Font = Enum.Font.SourceSansSemibold
 ca.Text = "No Disconnection"
 ca.TextSize = 22
 
--- Frame Container for Status and Buttons
+-- Frame Container for Status, Webhook Settings, and Buttons (Increased height)
 da.Parent = ca
 da.BackgroundColor3 = Color3.new(0.196078, 0.196078, 0.196078)
 da.Position = UDim2.new(0, 0, 1.0192306, 0)
-da.Size = UDim2.new(0, 304, 0, 120)
+da.Size = UDim2.new(0, 304, 0, 160)
 
 -- Status Label
 ab.Parent = da
 ab.BackgroundColor3 = Color3.new(0.176471, 0.176471, 0.176471)
-ab.Position = UDim2.new(0, 0, 0.1, 0)
+ab.Position = UDim2.new(0, 0, 0.05, 0)
 ab.Size = UDim2.new(0, 304, 0, 30)
 ab.Font = Enum.Font.ArialBold
 ab.Text = "Status: Script Started"
 ab.TextColor3 = Color3.new(1, 1, 1)
 ab.TextSize = 20
+
+-- Webhook Interval Label
+local intervalLabel = Instance.new("TextLabel")
+intervalLabel.Parent = da
+intervalLabel.BackgroundTransparency = 1
+intervalLabel.Position = UDim2.new(0.05, 0, 0.25, 0)
+intervalLabel.Size = UDim2.new(0, 140, 0, 20)
+intervalLabel.Font = Enum.Font.Arial
+intervalLabel.Text = "Webhook Interval (s):"
+intervalLabel.TextColor3 = Color3.new(1, 1, 1)
+intervalLabel.TextSize = 16
+
+-- Webhook Interval TextBox
+local intervalTextBox = Instance.new("TextBox")
+intervalTextBox.Parent = da
+intervalTextBox.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+intervalTextBox.Position = UDim2.new(0.55, 0, 0.25, 0)
+intervalTextBox.Size = UDim2.new(0, 100, 0, 20)
+intervalTextBox.Font = Enum.Font.SourceSans
+intervalTextBox.Text = "60"
+intervalTextBox.TextColor3 = Color3.new(1, 1, 1)
+intervalTextBox.TextSize = 16
 
 -- Anti-AFK functionality using VirtualUser
 local bb = game:service("VirtualUser")
@@ -48,28 +71,28 @@ local idledConnection = game:service("Players").LocalPlayer.Idled:Connect(functi
     ab.Text = "Script Re-Enabled"
 end)
 
--- User notification that appears at the bottom right of the screen
+-- User notification
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Notification",
     Text = "Made by prmmrc, enjoy!",
     Duration = 5
 })
 
--- Rainbow text effect for the main title
+-- Rainbow text effect
 spawn(function()
     while not isUnloaded do
         if not isPaused then
-            local hue = tick() % 5 / 5  -- Cycles the hue value over time
+            local hue = tick() % 5 / 5
             ca.TextColor3 = Color3.fromHSV(hue, 1, 1)
         end
         wait(0.1)
     end
 end)
 
--- Pause/Resume Button (Lighter Blue)
+-- Pause/Resume Button
 local pauseButton = Instance.new("TextButton")
 pauseButton.Parent = da
-pauseButton.BackgroundColor3 = Color3.fromRGB(102, 178, 255)  -- Lighter Blue
+pauseButton.BackgroundColor3 = Color3.fromRGB(102, 178, 255)  
 pauseButton.Position = UDim2.new(0.05, 0, 0.55, 0)
 pauseButton.Size = UDim2.new(0, 120, 0, 30)
 pauseButton.Font = Enum.Font.SourceSans
@@ -88,10 +111,10 @@ pauseButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Unload Button (Lighter Red)
+-- Unload Button
 local unloadButton = Instance.new("TextButton")
 unloadButton.Parent = da
-unloadButton.BackgroundColor3 = Color3.fromRGB(255, 102, 102)  -- Lighter Red
+unloadButton.BackgroundColor3 = Color3.fromRGB(255, 102, 102)
 unloadButton.Position = UDim2.new(0.55, 0, 0.55, 0)
 unloadButton.Size = UDim2.new(0, 120, 0, 30)
 unloadButton.Font = Enum.Font.SourceSans
@@ -107,4 +130,45 @@ unloadButton.MouseButton1Click:Connect(function()
     end
     wait(0.5)
     ba:Destroy()
+end)
+
+--------------------------
+-- Discord Webhook Code --
+--------------------------
+local HttpService = game:GetService("HttpService")
+local webhookURL = "https://discord.com/api/webhooks/1351319680375328822/pmJMIiLxH5uOBwjsCCpeSyHo5Z6BEzz0tAMUM2_84HmLQm4BSHoAvNWM7nzIisCi7KKu"
+
+-- Function to send webhook messages
+local function sendWebhookMessage(message)
+    local data = {
+        content = message
+    }
+    local jsonData = HttpService:JSONEncode(data)
+    HttpService:PostAsync(webhookURL, jsonData, Enum.HttpContentType.ApplicationJson)
+end
+
+-- Webhook updates
+spawn(function()
+    while not isUnloaded do
+        if not isPaused then
+            local interval = tonumber(intervalTextBox.Text) or 60
+            wait(interval)
+            if not isPaused and not isUnloaded then
+                local timeSpent = tick() - startTime
+                pcall(function()
+                    sendWebhookMessage("Time spent in-game: " .. math.floor(timeSpent) .. " seconds.")
+                end)
+            end
+        else
+            wait(1)
+        end
+    end
+end)
+
+-- Send a final webhook message when player leaves
+game:BindToClose(function()
+    local timeSpent = tick() - startTime
+    pcall(function()
+        sendWebhookMessage("Player disconnected. Total time spent in-game: " .. math.floor(timeSpent) .. " seconds.")
+    end)
 end)
